@@ -1,7 +1,23 @@
 from enum import Enum
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+from database.crud import create_user
+
+from database.database import Base, SessionLocal, engine
+from sqlalchemy.orm import Session
+
+from database.schemas import UserCreate
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 class Level(Enum):
@@ -20,7 +36,7 @@ def root():
 
 # http://localhost:8000/quiz?level=high
 @app.get("/quiz")
-async def root(level: str):
+async def root(level: str, db: Session = Depends(get_db)):
     print(level, Level.HIGH.value)
     if level == Level.HIGH.value:
         return {level: "high"}
@@ -33,3 +49,12 @@ async def root(level: str):
             status_code=400,
             detail="Make sure you specified the level correctly in query parameter.",
         )
+
+
+@app.get("/create")
+async def create(email: str, db: Session = Depends(get_db)):
+    user = UserCreate(email=email, password="password")
+    create_user(db, user=user)
+
+
+# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
