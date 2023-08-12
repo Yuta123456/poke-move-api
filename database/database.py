@@ -3,8 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-DATABASE_PASSWORD = os.environ["DATABASE_PASSWORD"]
-SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:{DATABASE_PASSWORD}@db.zpbdtwotybkdyjqrgmye.supabase.co:5432/postgres"
+SQLALCHEMY_DATABASE_URL = os.environ["DATABASE_URL"]
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

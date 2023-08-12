@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from enum import Enum
 from fastapi import Depends, FastAPI, HTTPException
 from database.crud import create_user
@@ -6,6 +10,7 @@ from database.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
 from database.schemas import UserCreate
+
 
 Base.metadata.create_all(bind=engine)
 
