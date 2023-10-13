@@ -1,14 +1,19 @@
 from dotenv import load_dotenv
 
 load_dotenv()
+import sys
+import os
 
+sys.path.append("src")
 from enum import Enum
 from fastapi import Depends, FastAPI, HTTPException
-from database.crud import create_user
+
+# from database.crud import create_user
 
 from database.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
+from database.crud import create_user
 from database.schemas import UserCreate
 
 
@@ -42,7 +47,6 @@ def root():
 # http://localhost:8000/quiz?level=high
 @app.get("/quiz")
 async def root(level: str, db: Session = Depends(get_db)):
-    print(level, Level.HIGH.value)
     if level == Level.HIGH.value:
         return {level: "high"}
     elif level == Level.MIDDLE.value:
