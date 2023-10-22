@@ -4,7 +4,7 @@ load_dotenv()
 import sys
 import os
 
-sys.path.append("src")
+sys.path.append("app")
 from enum import Enum
 from fastapi import Depends, FastAPI, HTTPException
 

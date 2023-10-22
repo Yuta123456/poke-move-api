@@ -3,6 +3,6 @@
 - postgres サーバ停止
   `sudo service postgresql stop`
 - サーバ起動
-  `uvicorn src.main:app --reload`
+  `uvicorn app.main:app --reload`
 - db
   supabase

@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  db:
+    container_name: poke-move-postgres
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
+    logging:
+      options:
+        max-size: "10k"
+        max-file: "5"
+    networks:
+    - rps-network
+  api:
+    container_name: poke-move
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - rps-network
+    ports:
+      - "8000:8000"
+    tty: true
+networks:
+  rps-network:
