@@ -13,10 +13,9 @@ from fastapi import Depends, FastAPI, HTTPException
 from database.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
-from database.crud import create_user
 from database.schemas import UserCreate
 
-
+# モデルにある全部をcreate tableしてくれる
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
 
 from database.database import Base
@@ -8,19 +8,86 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
+    api_token = Column(String, unique=True)
+    refresh_token = Column(String, unique=True)
 
-    items = relationship("Item", back_populates="owner")
+    challenges = relationship("Challenge", back_populates="user")
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Challenge(Base):
+    __tablename__ = "challenges"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    is_answered = Column(Boolean)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="items")
+    user = relationship("User", back_populates="challenges")
+
+
+class Quiz(Base):
+    __tablename__ = "quizzes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    challenge_id = Column(Integer, ForeignKey("challenges.id"))
+    pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
+
+    owner = relationship("Challenge", back_populates="challenges")
+
+    quiz_answers = relationship("QuizAnswer", back_populates="quiz")
+    quiz_choices = relationship("Challenge", back_populates="challenges")
+
+
+class QuizAnswer(Base):
+    __tablename__ = "quiz answers"
+    id = Column(Integer, primary_key=True, index=True)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"))
+    move_id = Column(Integer, ForeignKey("moves.id"))
+
+    quiz = relationship("Quiz", back_populates="quiz_answers")
+
+
+class QuizChoice(Base):
+    __tablename__ = "quiz choices"
+
+    id = Column(Integer, primary_key=True, index=True)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"))
+    move_id = Column(Integer, ForeignKey("moves.id"))
+
+    quiz = relationship("Quiz", back_populates="quiz_choices")
+
+
+class Pokemon(Base):
+    __tablename__ = "pokemons"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    type_id_1 = Column(Integer, ForeignKey("types.id"))
+    type_id_2 = Column(Integer, ForeignKey("types.id"))
+    img_url = Column(String)
+    shiny_img_url = Column(String)
+
+
+class Move(Base):
+    __tablename__ = "moves"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    type_id = Column(Integer, ForeignKey("types.id"))
+    pp = Column(Integer)
+    description = Column(String)
+
+
+class PokeMove(Base):
+    __tablename__ = "pokemoves"
+    id = Column(Integer, primary_key=True, index=True)
+    Pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
+    move_id = Column(Integer, ForeignKey("moves.id"))
+
+    learn_probability = Column(Float)
+
+    can_learn = Column(Boolean)
+
+
+class Type(Base):
+    __tablename__ = "types"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
