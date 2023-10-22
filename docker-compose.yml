@@ -25,5 +25,7 @@ services:
     ports:
       - "8000:8000"
     tty: true
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres
 networks:
   rps-network:
