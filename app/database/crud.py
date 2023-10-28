@@ -41,3 +41,7 @@ from app.database.models import Type
 
 def get_type(db: Session, type_id: int):
     return db.query(Type).filter(Type.id == type_id).first()
+
+
+def get_type_by_name(db: Session, type_name: str):
+    return db.query(Type).filter(Type.name == type_name).first()

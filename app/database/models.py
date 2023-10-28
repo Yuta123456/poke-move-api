@@ -1,7 +1,10 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
+import sys
+import os
 
-from app.database.database import Base
+sys.path.append("app/database")
+from app.database.main import Base
 
 
 class User(Base):

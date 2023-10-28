@@ -12,7 +12,7 @@ from fastapi import Depends, FastAPI, HTTPException
 
 # from database.crud import create_user
 
-from database.database import Base, SessionLocal, engine
+from database.main import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
 from database.schemas import UserCreate

@@ -4,16 +4,16 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from app.database.database import Base
+from database.main import Base
 from app.database.models import (
-    # QuizAnswer,
-    # Quiz,
-    # Challenge,
-    # User,
-    # QuizChoice,
+    QuizAnswer,
+    Quiz,
+    Challenge,
+    User,
+    QuizChoice,
     Pokemon,
     Move,
-    # PokeMove,
+    PokeMove,
     Type,
 )
 
