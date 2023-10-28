@@ -4,57 +4,58 @@ from sqlalchemy.orm import relationship
 from app.database.database import Base
 
 
-# class User(Base):
-#     __tablename__ = "users"
+class User(Base):
+    __tablename__ = "users"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     api_token = Column(String, unique=True)
-#     refresh_token = Column(String, unique=True)
+    id = Column(Integer, primary_key=True, index=True)
+    api_token = Column(String, unique=True)
+    refresh_token = Column(String, unique=True)
 
-#     challenges = relationship("Challenge", back_populates="user")
-
-
-# class Challenge(Base):
-#     __tablename__ = "challenges"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     is_answered = Column(Boolean)
-#     user_id = Column(Integer, ForeignKey("users.id"))
-
-#     user = relationship("User", back_populates="challenges")
+    challenges = relationship("Challenge", back_populates="user")
 
 
-# class Quiz(Base):
-#     __tablename__ = "quizzes"
+class Challenge(Base):
+    __tablename__ = "challenges"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     challenge_id = Column(Integer, ForeignKey("challenges.id"))
-#     pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    is_answered = Column(Boolean)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
-#     owner = relationship("Challenge", back_populates="quiz")
+    user = relationship("User", back_populates="challenges")
 
-#     quiz_answers = relationship("QuizAnswer", back_populates="quiz")
-#     quiz_choices = relationship("Challenge", back_populates="challenges")
-
-
-# class QuizAnswer(Base):
-#     __tablename__ = "quiz answers"
-#     id = Column(Integer, primary_key=True, index=True)
-#     quiz_id = Column(Integer, ForeignKey("quizzes.id"))
-#     move_id = Column(Integer, ForeignKey("moves.id"))
-
-#     quiz = relationship("Quiz", back_populates="quiz_answers")
+    quiz = relationship("Quiz", back_populates="owner")
 
 
-# class QuizChoice(Base):
-#     __tablename__ = "quiz choices"
+class Quiz(Base):
+    __tablename__ = "quizzes"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     quiz_id = Column(Integer, ForeignKey("quizzes.id"))
-#     move_id = Column(Integer, ForeignKey("moves.id"))
+    id = Column(Integer, primary_key=True, index=True)
+    challenge_id = Column(Integer, ForeignKey("challenges.id"))
+    pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
 
-#     # quiz = relationship("Quiz", back_populates="quiz_choices")
-#     quiz = relationship("Quiz", back_populates="quiz_choices")
+    owner = relationship("Challenge", back_populates="quiz")
+
+    quiz_answers = relationship("QuizAnswer", back_populates="quiz")
+    quiz_choices = relationship("QuizChoice", back_populates="quiz")
+
+
+class QuizAnswer(Base):
+    __tablename__ = "quiz answers"
+    id = Column(Integer, primary_key=True, index=True)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"))
+    move_id = Column(Integer, ForeignKey("moves.id"))
+
+    quiz = relationship("Quiz", back_populates="quiz_answers")
+
+
+class QuizChoice(Base):
+    __tablename__ = "quiz choices"
+
+    id = Column(Integer, primary_key=True, index=True)
+    quiz_id = Column(Integer, ForeignKey("quizzes.id"))
+    move_id = Column(Integer, ForeignKey("moves.id"))
+
+    quiz = relationship("Quiz", back_populates="quiz_choices")
 
 
 class Pokemon(Base):
