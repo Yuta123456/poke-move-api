@@ -1,4 +1,6 @@
-# from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
+
+from app.database.models import Type
 
 # from database.models import Item, User
 # from database.schemas import ItemCreate, UserCreate
@@ -35,3 +37,7 @@
 #     db.commit()
 #     db.refresh(db_item)
 #     return db_item
+
+
+def get_type(db: Session, type_id: int):
+    return db.query(Type).filter(Type.id == type_id).first()

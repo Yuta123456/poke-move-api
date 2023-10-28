@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 
+from app.database.crud import get_type
+
 load_dotenv()
 import sys
 import os
@@ -63,6 +65,12 @@ async def root(level: str, db: Session = Depends(get_db)):
 async def create(email: str, db: Session = Depends(get_db)):
     user = UserCreate(email=email, password="password")
     create_user(db, user=user)
+
+
+@app.get("/type/{id}")
+async def type(id: int, db: Session = Depends(get_db)):
+    type = get_type(db, id)
+    return type
 
 
 # def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
