@@ -77,15 +77,15 @@ class Move(Base):
     description = Column(String)
 
 
-# class PokeMove(Base):
-#     __tablename__ = "pokemoves"
-#     id = Column(Integer, primary_key=True, index=True)
-#     Pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
-#     move_id = Column(Integer, ForeignKey("moves.id"))
+class PokeMove(Base):
+    __tablename__ = "pokemoves"
+    id = Column(Integer, primary_key=True, index=True)
+    Pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
+    move_id = Column(Integer, ForeignKey("moves.id"))
 
-#     learn_probability = Column(Float)
+    learn_probability = Column(Float)
 
-#     can_learn = Column(Boolean)
+    can_learn = Column(Boolean)
 
 
 class Type(Base):
