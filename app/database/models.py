@@ -57,24 +57,24 @@ from app.database.database import Base
 #     quiz = relationship("Quiz", back_populates="quiz_choices")
 
 
-# class Pokemon(Base):
-#     __tablename__ = "pokemons"
+class Pokemon(Base):
+    __tablename__ = "pokemons"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String)
-#     type_id_1 = Column(Integer, ForeignKey("types.id"))
-#     type_id_2 = Column(Integer, ForeignKey("types.id"))
-#     img_url = Column(String)
-#     shiny_img_url = Column(String)
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    type_id_1 = Column(Integer, ForeignKey("types.id"))
+    type_id_2 = Column(Integer, ForeignKey("types.id"))
+    img_url = Column(String)
+    shiny_img_url = Column(String)
 
 
-# class Move(Base):
-#     __tablename__ = "moves"
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String)
-#     type_id = Column(Integer, ForeignKey("types.id"))
-#     pp = Column(Integer)
-#     description = Column(String)
+class Move(Base):
+    __tablename__ = "moves"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    type_id = Column(Integer, ForeignKey("types.id"))
+    pp = Column(Integer)
+    description = Column(String)
 
 
 # class PokeMove(Base):

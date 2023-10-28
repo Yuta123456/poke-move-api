@@ -11,8 +11,8 @@ from app.database.models import (
     # Challenge,
     # User,
     # QuizChoice,
-    # Pokemon,
-    # Move,
+    Pokemon,
+    Move,
     # PokeMove,
     Type,
 )

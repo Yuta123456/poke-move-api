@@ -3,7 +3,6 @@ from sqlalchemy.orm import sessionmaker
 import sys
 import os
 
-sys.path.append("app")
 
 from database.models import Type
 
@@ -36,7 +35,6 @@ data = [
     Type(name="Dark"),
     Type(name="Steel"),
     Type(name="Fairy"),
-    # 他の初期データも追加
 ]
 session.add_all(data)
 session.commit()
