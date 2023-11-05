@@ -1,12 +1,14 @@
 from dotenv import load_dotenv
-from fastapi.security import OAuth2PasswordBearer
-
-from app.database.crud import get_challenge_by_id, get_type
-from app.database.models import Quiz, User
-from app.service.auth import create_user, get_user, verify_access_token
-from app.service.challenge import create_challenge
 
 load_dotenv()
+from fastapi.security import OAuth2PasswordBearer
+
+from app.database.crud import get_challenge_by_id, get_type, get_user_by_id
+from app.database.models import Quiz, User
+from app.service.auth import create_user, verify_access_token
+from app.service.challenge import create_challenge
+
+
 import sys
 import os
 
@@ -66,15 +68,17 @@ async def root(level: str, db: Session = Depends(get_db)):
 
 
 @app.get("/user")
-async def user(db: Session = Depends(get_db)):
+def user(db: Session = Depends(get_db)):
     user = create_user(db)
+    print(user.api_token, user.id, user.refresh_token)
     return user
 
 
 @app.get("/challenge")
 async def challenge(
-    db: Session = Depends(get_db), user: dict = Depends(verify_access_token)
+    db: Session = Depends(get_db), user_id: dict = Depends(verify_access_token)
 ):
+    user = get_user_by_id(db, user_id)
     challenge = create_challenge(db, user)
     res = {
         "challenge_id": challenge.id,

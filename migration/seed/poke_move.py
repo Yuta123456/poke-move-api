@@ -1,7 +1,7 @@
 import json
 from sqlalchemy.orm import Session
 
-from app.database.crud import get_pokemon_by_id, get_pokemon_by_name
+from app.database.crud import get_move_by_id, get_pokemon_by_id, get_pokemon_by_name
 from app.database.models import PokeMove
 
 
@@ -12,6 +12,9 @@ def create_seed_poke_move(db: Session):
         path = f"/home/yuuta/poke-move-api/data/data/moves/{move_id}.json"
         with open(path, "r") as f:
             move = json.load(f)
+        # move = get_move_by_id(db, move["id"])
+        if not get_move_by_id(db, move["id"]):
+            continue
         pokemon_names = map(lambda x: x["name"], move["learned_by_pokemon"])
         skip_pokemon_ids = set()
         for name in pokemon_names:

@@ -39,15 +39,15 @@ def verify_access_token(encoded_token: str = Depends(oauth2_scheme)):
         # アクセストークンの検証
         payload = jwt.decode(encoded_token, SECRET_KEY, algorithms=[ALGORITHM])
         # 有効期限の確認
-        if payload["exp"] < datetime.utcnow():
+        if datetime.utcfromtimestamp(payload["exp"]) < datetime.utcnow():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="アクセストークンの有効期限が切れています",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         user_id = payload["sub"]
-        user = get_user_by_id(user_id)
-        return user  # 正当なアクセストークン
+
+        return user_id  # 正当なアクセストークン
     except jwt.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -58,11 +58,13 @@ def verify_access_token(encoded_token: str = Depends(oauth2_scheme)):
 
 def create_user(db: Session) -> User:
     user_id = generate_user_id()
+    expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user_id}, expires_delta=ACCESS_TOKEN_EXPIRE_MINUTES
+        data={"sub": user_id}, expires_delta=expires_delta
     )
     refresh_token = generate_refresh_token()
     user = User(id=user_id, api_token=access_token, refresh_token=refresh_token)
     # user追加
     db.add(user)
+    db.commit()
     return user

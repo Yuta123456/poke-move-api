@@ -1,7 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from sqlalchemy.orm import relationship
 import sys
-import os
 
 sys.path.append("app/database")
 from app.database.main import Base
@@ -10,7 +9,7 @@ from app.database.main import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     api_token = Column(String, unique=True)
     refresh_token = Column(String, unique=True)
 
@@ -20,9 +19,9 @@ class User(Base):
 class Challenge(Base):
     __tablename__ = "challenges"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String, primary_key=True, index=True)
     is_answered = Column(Boolean)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(String, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="challenges")
 
@@ -33,7 +32,7 @@ class Quiz(Base):
     __tablename__ = "quizzes"
 
     id = Column(Integer, primary_key=True, index=True)
-    challenge_id = Column(Integer, ForeignKey("challenges.id"))
+    challenge_id = Column(String, ForeignKey("challenges.id"))
     pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
 
     owner = relationship("Challenge", back_populates="quiz")

@@ -37,6 +37,5 @@ moves = create_seed_moves(session)
 session.commit()
 
 poke_moves = create_seed_poke_move(session)
-print(len(poke_moves))
-session.add_all(poke_moves)
+# session.add_all(poke_moves)
 session.commit()
