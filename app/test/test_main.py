@@ -29,4 +29,4 @@ def test_get_challenge():
         "/challenge", headers={"Authorization": "Bearer " + access_token}
     )
     print(challenge)
-    assert challenge.status_code == 404
+    assert challenge.status_code == 200

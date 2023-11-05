@@ -40,5 +40,5 @@ def create_quiz(db: Session, challenge: Challenge) -> Quiz:
             db.add(quiz_choice)
         quiz_answer = QuizAnswer(quiz_id=quiz.id, move_id=answer_move[0].id)
         db.add(quiz_answer)
-    db.add(quizzes)
+    db.add_all(quizzes)
     db.commit()
