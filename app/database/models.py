@@ -84,7 +84,7 @@ class Move(Base):
 class PokeMove(Base):
     __tablename__ = "pokemoves"
     id = Column(Integer, primary_key=True, index=True)
-    Pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
+    pokemon_id = Column(Integer, ForeignKey("pokemons.id"))
     move_id = Column(Integer, ForeignKey("moves.id"))
 
     learn_probability = Column(Float)

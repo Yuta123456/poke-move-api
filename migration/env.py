@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from database.main import Base
+from app.database.main import Base
 from app.database.models import (
     QuizAnswer,
     Quiz,

@@ -3,10 +3,13 @@ from sqlalchemy.orm import sessionmaker
 import sys
 import os
 
+
 sys.path.append("./")
 sys.path.append("../")
-
+from migration.seed.move import create_seed_moves
+from migration.seed.type import get_seed_types
 from migration.seed.pokemon import create_seed_pokemon
+from migration.seed.poke_move import create_seed_poke_move
 
 from app.database.models import Pokemon, Type
 
@@ -21,42 +24,19 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # add types
-types = [
-    Type(name="normal"),
-    Type(name="fire"),
-    Type(name="water"),
-    Type(name="grass"),
-    Type(name="electric"),
-    Type(name="ice"),
-    Type(name="fighting"),
-    Type(name="poison"),
-    Type(name="ground"),
-    Type(name="flying"),
-    Type(name="psychic"),
-    Type(name="bug"),
-    Type(name="rock"),
-    Type(name="ghost"),
-    Type(name="dragon"),
-    Type(name="dark"),
-    Type(name="steel"),
-    Type(name="fairy"),
-    Type(name="none"),
-]
-session.add_all(types)
+types = get_seed_types()
+# session.add_all(types)
 session.commit()
 
 # add pokemons
 pokemons = create_seed_pokemon(session)
-# 1 bulbasaur 127 131 https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png
+moves = create_seed_moves(session)
 
-# pokemon = Pokemon(
-#     id=2,
-#     name="bulbasaur",
-#     type_id_1=127,
-#     type_id_2=131,
-#     img_url="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-#     shiny_img_url="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png",
-# )
+# session.add_all(pokemons)
+# session.add_all(moves)
+session.commit()
 
-session.add_all(pokemons)
+poke_moves = create_seed_poke_move(session)
+print(len(poke_moves))
+session.add_all(poke_moves)
 session.commit()

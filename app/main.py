@@ -1,6 +1,10 @@
 from dotenv import load_dotenv
+from fastapi.security import OAuth2PasswordBearer
 
-from app.database.crud import get_type
+from app.database.crud import get_challenge_by_id, get_type
+from app.database.models import Quiz, User
+from app.service.auth import create_user, get_user, verify_access_token
+from app.service.challenge import create_challenge
 
 load_dotenv()
 import sys
@@ -12,10 +16,10 @@ from fastapi import Depends, FastAPI, HTTPException
 
 # from database.crud import create_user
 
-from database.main import Base, SessionLocal, engine
+from app.database.main import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
-from database.schemas import UserCreate
+from app.database.schemas import UserCreate
 
 # モデルにある全部をcreate tableしてくれる
 Base.metadata.create_all(bind=engine)
@@ -61,14 +65,38 @@ async def root(level: str, db: Session = Depends(get_db)):
         )
 
 
-@app.get("/create")
-async def create(email: str, db: Session = Depends(get_db)):
-    user = UserCreate(email=email, password="password")
-    create_user(db, user=user)
+@app.get("/user")
+async def user(db: Session = Depends(get_db)):
+    user = create_user(db)
+    return user
+
+
+@app.get("/challenge")
+async def challenge(
+    db: Session = Depends(get_db), user: dict = Depends(verify_access_token)
+):
+    challenge = create_challenge(db, user)
+    res = {
+        "challenge_id": challenge.id,
+    }
+    return res
 
 
 @app.get("/type/{id}")
 async def type(id: int, db: Session = Depends(get_db)):
+    type = get_type(db, id)
+    return type
+
+
+@app.get("/challenge/{challenge_id}/quiz")
+async def get_quiz(challenge_id: int, db: Session = Depends(get_db)):
+    challenge = get_challenge_by_id(db, challenge_id)
+    quiz: list[Quiz] = challenge.quiz
+    return type
+
+
+@app.post("/challenge/{challenge_id}/answer")
+async def get_quiz(id: int, db: Session = Depends(get_db)):
     type = get_type(db, id)
     return type
 
