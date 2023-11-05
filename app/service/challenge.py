@@ -36,9 +36,9 @@ def create_quiz(db: Session, challenge: Challenge) -> Quiz:
         question_move = random.sample(pokemon_not_learned_moves, 3)
 
         for choice in answer_move + question_move:
-            quiz_choice = QuizChoice(quiz_id=quiz.id, move_id=choice.id)
+            quiz_choice = QuizChoice(quiz_id=quiz.id, move_id=choice.id, quiz=quiz)
             db.add(quiz_choice)
-        quiz_answer = QuizAnswer(quiz_id=quiz.id, move_id=answer_move[0].id)
+        quiz_answer = QuizAnswer(quiz_id=quiz.id, move_id=answer_move[0].id, quiz=quiz)
         db.add(quiz_answer)
     db.add_all(quizzes)
     db.commit()

@@ -15,7 +15,7 @@ def get_type(db: Session, type_id: int):
     return db.query(Type).filter(Type.id == type_id).first()
 
 
-def get_challenge_by_id(db: Session, challenge_id: int):
+def get_challenge_by_id(db: Session, challenge_id: str):
     return db.query(Challenge).filter(Challenge.id == challenge_id).first()
 
 

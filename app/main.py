@@ -70,6 +70,7 @@ async def root(level: str, db: Session = Depends(get_db)):
 @app.get("/user")
 def user(db: Session = Depends(get_db)):
     user = create_user(db)
+    # TODO: 消せないprint文。
     print(user.api_token, user.id, user.refresh_token)
     return user
 
@@ -93,10 +94,14 @@ async def type(id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/challenge/{challenge_id}/quiz")
-async def get_quiz(challenge_id: int, db: Session = Depends(get_db)):
+async def get_quiz(challenge_id: str, db: Session = Depends(get_db)):
     challenge = get_challenge_by_id(db, challenge_id)
-    quiz: list[Quiz] = challenge.quiz
-    return type
+    quizzes: list[Quiz] = challenge.quiz
+    choices = []
+    for q in quizzes:
+        print(q.quiz_choices)
+        choices.append(q.quiz_choices)
+    return choices
 
 
 @app.post("/challenge/{challenge_id}/answer")
