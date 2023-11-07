@@ -15,3 +15,6 @@
   - `alembic revision --autogenerate -m ""`
   - `alembic upgrade head`
   <!-- URL: https://poke-move-api-d3y43tvzba-uc.a.run.app/ -->
+
+<!-- pg_dump -U postgres -h localhost -p 54322 -d postgres -n public --schema-only --f
+ile=out.sql -->
