@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from app.database.crud import get_challenge_by_id, get_type, get_user_by_id
 from app.database.models import Quiz, User
 from app.service.auth import create_user, verify_access_token
-from app.service.challenge import create_challenge
+from app.service.challenge import check_answer, create_challenge
 
 
 import sys
@@ -21,7 +21,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from app.database.main import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
 
-from app.database.schemas import UserCreate
+from app.database.schemas import UserAnswer
 
 # モデルにある全部をcreate tableしてくれる
 Base.metadata.create_all(bind=engine)
@@ -94,20 +94,28 @@ async def type(id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/challenge/{challenge_id}/quiz")
-async def get_quiz(challenge_id: str, db: Session = Depends(get_db)):
+async def get_quiz(
+    challenge_id: str,
+    db: Session = Depends(get_db),
+    user_id: dict = Depends(verify_access_token),
+):
     challenge = get_challenge_by_id(db, challenge_id)
     quizzes: list[Quiz] = challenge.quiz
     choices = []
     for q in quizzes:
-        print(q.quiz_choices)
         choices.append(q.quiz_choices)
     return choices
 
 
 @app.post("/challenge/{challenge_id}/answer")
-async def get_quiz(id: int, db: Session = Depends(get_db)):
-    type = get_type(db, id)
-    return type
+async def post_answer(
+    challenge_id: str,
+    user_answer: UserAnswer,
+    db: Session = Depends(get_db),
+    user_id: dict = Depends(verify_access_token),
+):
+    summary = check_answer(db, challenge_id, user_answer)
+    return summary
 
 
 # def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):

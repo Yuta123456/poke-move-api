@@ -4,9 +4,12 @@ from sqlalchemy.orm import Session
 
 from app.database.models import Challenge, Quiz, User, QuizAnswer, QuizChoice
 from app.database.crud import (
+    get_answer_by_challenge_id,
     get_learned_moves_by_pokemon_id,
     get_not_learned_moves_by_pokemon_id,
+    update_challenge_is_answered,
 )
+from app.database.schemas import UserAnswer
 
 
 def create_challenge(db: Session, user: User) -> Challenge:
@@ -42,3 +45,16 @@ def create_quiz(db: Session, challenge: Challenge) -> Quiz:
         db.add(quiz_answer)
     db.add_all(quizzes)
     db.commit()
+
+
+def check_answer(db: Session, challenge_id: str, user_answer: UserAnswer):
+    answers = get_answer_by_challenge_id(db, challenge_id)
+    # quiz_id: int
+    # answer_move_id: int
+    score = 0
+    user_answers = sorted(user_answer.answers, key=lambda x: x.quiz_id)
+    for i in range(len(user_answers)):
+        if user_answers[i].answer_move_id == answers[i].move_id:
+            score += 1
+    update_challenge_is_answered(db, challenge_id)
+    return {"answers": answers, "score": score}
